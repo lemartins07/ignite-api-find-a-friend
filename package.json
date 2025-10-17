@@ -24,6 +24,7 @@
     "@vitest/coverage-v8": "3.1.2",
     "@vitest/ui": "3.1.2",
     "eslint": "8.34.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
     "prisma": "4.10.1",
     "supertest": "6.3.3",
     "tsup": "6.6.3",
@@ -36,6 +37,8 @@
   "dependencies": {
     "@fastify/cookie": "8.3.0",
     "@fastify/jwt": "6.7.0",
+    "@fastify/swagger": "8.14.0",
+    "@fastify/swagger-ui": "4.1.0",
     "@prisma/client": "4.10.1",
     "bcryptjs": "2.4.3",
     "dayjs": "1.11.7",
