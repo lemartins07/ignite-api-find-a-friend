@@ -9,3 +9,89 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum PetAge {
+  PUPPY
+  ADULT
+  SENIOR
+}
+
+enum PetSize {
+  SMALL
+  MEDIUM
+  LARGE
+  GIANT
+}
+
+enum EnergyLevel {
+  LOW // calmo / tranquilo
+  MEDIUM // moderado
+  HIGH // muito ativo / enérgico
+}
+
+enum LivingEnvironment {
+  SMALL_SPACE // apartamento pequeno / kitnet
+  MEDIUM_SPACE // casa ou apê médio
+  LARGE_SPACE // quintal / espaço amplo
+}
+
+enum IndependenceLevel {
+  LOW // muito dependente, quer atenção constante
+  MEDIUM // equilibrado, gosta de companhia mas fica bem sozinho
+  HIGH // independente, passa bem mais tempo sozinho
+}
+
+model Organization {
+  id            String   @id @default(uuid())
+  name          String
+  owner         String
+  email         String
+  zip_code      String
+  address       String
+  phone         String
+  created_at    DateTime @default(now())
+  password_hash String
+  role          Role     @default(MEMBER)
+  Pet           Pet[]
+
+  @@map("organizations")
+}
+
+model Pet {
+  id                  String                @id @default(uuid())
+  name                String
+  description         String
+  age                 PetAge
+  size                PetSize
+  independence_level  IndependenceLevel
+  living_environment  LivingEnvironment
+  energy_level        EnergyLevel
+  PetPicture          PetPicture[]
+  AdoptionRequirement AdoptionRequirement[]
+  Organization        Organization          @relation(fields: [organizationId], references: [id])
+  organizationId      String
+
+  @@map("pets")
+}
+
+model PetPicture {
+  id    String @id @default(uuid())
+  Pet   Pet    @relation(fields: [petId], references: [id])
+  petId String
+
+  @@map("pet_pictures")
+}
+
+model AdoptionRequirement {
+  id          Int     @id @default(autoincrement())
+  description String
+  Pet         Pet?    @relation(fields: [petId], references: [id])
+  petId       String?
+
+  @@map("adoption_requirements")
+}
