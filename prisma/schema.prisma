@@ -83,6 +83,7 @@ model PetPicture {
   id    String @id @default(uuid())
   Pet   Pet    @relation(fields: [petId], references: [id])
   petId String
+  path  String
 
   @@map("pet_pictures")
 }

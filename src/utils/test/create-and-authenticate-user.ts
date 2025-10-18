@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { hash } from 'bcryptjs'
 import { FastifyInstance } from 'fastify'
 import request from 'supertest'
@@ -8,10 +10,12 @@ export async function createAndAuthenticateUser(
   app: FastifyInstance,
   isAdmin = false,
 ) {
-  await prisma.organization.create({
+  const email = `org-${randomUUID()}@example.com`
+
+  const organization = await prisma.organization.create({
     data: {
       address: 'Address 1',
-      email: 'org@email.com',
+      email,
       password_hash: await hash('123456', 6),
       name: 'ACME',
       owner: 'John Doe',
@@ -21,7 +25,7 @@ export async function createAndAuthenticateUser(
   })
 
   const authResponse = await request(app.server).post('/sessions').send({
-    email: 'org@email.com',
+    email,
     password: '123456',
   })
 
@@ -29,5 +33,6 @@ export async function createAndAuthenticateUser(
 
   return {
     token,
+    organization,
   }
 }
