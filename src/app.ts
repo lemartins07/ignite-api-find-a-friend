@@ -32,6 +32,11 @@ app.register(swagger, {
     components: {
       securitySchemes: {
         bearerAuth: { type: 'http', scheme: 'bearer' },
+        refreshTokenCookie: {
+          type: 'apiKey',
+          in: 'cookie',
+          name: 'refreshToken',
+        },
       },
     },
   },
