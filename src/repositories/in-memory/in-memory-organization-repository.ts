@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 
 import { Organization, Prisma } from '@prisma/client'
 
-import { OrganizationsRepository } from '../organization-repository'
+import { OrganizationsRepository } from '../organizations-repository'
 
 export class InMemoryOrganizationRepository implements OrganizationsRepository {
   public items: Organization[] = []

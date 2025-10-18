@@ -50,7 +50,7 @@ model Organization {
   id            String   @id @default(uuid())
   name          String
   owner         String
-  email         String
+  email         String   @unique
   zip_code      String
   address       String
   phone         String

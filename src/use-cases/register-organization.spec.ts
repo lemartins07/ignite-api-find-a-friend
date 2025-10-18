@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { InMemoryOrganizationRepository } from '@/repositories/in-memory/in-memory-organization-repository'
 
+import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 import { RegisterOrganizationUseCase } from './register-organization'
 
 let organizationRepository: InMemoryOrganizationRepository
@@ -68,6 +69,6 @@ describe('Register Organization Use Case', () => {
         phone: '+5551994498100',
         zip_code: '12345-678',
       }),
-    ).rejects.Throw(Error)
+    ).rejects.Throw(UserAlreadyExistsError)
   })
 })
