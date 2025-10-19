@@ -32,10 +32,13 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       .optional(),
   })
 
-  const { organizationId } = createPetParamsSchema.parse(request.params)
+  createPetParamsSchema.parse(request.params)
+  const organizationId = request.user.sub
+  const data = createBodySchema.parse(request.body)
+
   const input = {
     data: {
-      ...createBodySchema.parse(request.body),
+      ...data,
       organizationId,
     },
   }

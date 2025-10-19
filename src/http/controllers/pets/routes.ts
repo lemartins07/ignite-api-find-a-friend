@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 
 import { verifyJwt } from '@/http/middlewares/verify-jwt'
+import { verifyOrganizationParam } from '@/http/middlewares/verify-organization'
 
 import { create } from './create'
 
@@ -10,6 +11,7 @@ export async function petsRoutes(app: FastifyInstance) {
   app.post(
     '/organization/:organizationId/pets',
     {
+      preHandler: verifyOrganizationParam('organizationId'),
       schema: {
         summary: 'Register a new pet',
         tags: ['Pets'],
