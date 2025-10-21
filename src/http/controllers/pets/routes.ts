@@ -4,14 +4,13 @@ import { verifyJwt } from '@/http/middlewares/verify-jwt'
 import { verifyOrganizationParam } from '@/http/middlewares/verify-organization'
 
 import { create } from './create'
+import { list } from './list'
 
 export async function petsRoutes(app: FastifyInstance) {
-  app.addHook('onRequest', verifyJwt)
-
   app.post(
     '/organization/:organizationId/pets',
     {
-      preHandler: verifyOrganizationParam('organizationId'),
+      preHandler: [verifyJwt, verifyOrganizationParam('organizationId')],
       schema: {
         summary: 'Register a new pet',
         tags: ['Pets'],
@@ -176,5 +175,58 @@ export async function petsRoutes(app: FastifyInstance) {
       },
     },
     create,
+  )
+
+  app.get(
+    '/pets',
+    {
+      schema: {
+        summary: 'List pets',
+        tags: ['Pets'],
+        querystring: {
+          type: 'object',
+          required: ['city', 'state'],
+          properties: {
+            city: { type: 'string' },
+            state: { type: 'string' },
+            age: {
+              type: 'string',
+              enum: ['PUPPY', 'ADULT', 'SENIOR'],
+            },
+            energy_level: {
+              type: 'string',
+              enum: ['LOW', 'MEDIUM', 'HIGH'],
+            },
+            size: {
+              type: 'string',
+              enum: ['SMALL', 'MEDIUM', 'LARGE', 'GIANT'],
+            },
+            independence_level: {
+              type: 'string',
+              enum: ['LOW', 'MEDIUM', 'HIGH'],
+            },
+          },
+          additionalProperties: false,
+        },
+        response: {
+          200: {
+            description: 'List of pets available for adoption',
+            type: 'object',
+            required: ['pets'],
+            properties: {
+              pets: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  additionalProperties: true,
+                },
+              },
+            },
+            additionalProperties: false,
+          },
+        },
+      },
+    },
+    list,
   )
 }

@@ -14,7 +14,7 @@ export async function createAndAuthenticateUser(
 
   const organization = await prisma.organization.create({
     data: {
-      address: 'Address 1',
+      address: 'Porto Alegre - RS',
       email,
       password_hash: await hash('123456', 6),
       name: 'ACME',

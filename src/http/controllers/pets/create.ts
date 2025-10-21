@@ -37,10 +37,8 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   const data = createBodySchema.parse(request.body)
 
   const input = {
-    data: {
-      ...data,
-      organizationId,
-    },
+    ...data,
+    organizationId,
   }
 
   const createPetUseCase = makeCreatePetUseCase()
