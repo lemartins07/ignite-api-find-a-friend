@@ -1,4 +1,5 @@
 import fastifyCookie from '@fastify/cookie'
+import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
@@ -8,6 +9,12 @@ import { ZodError } from 'zod'
 import { env } from './env'
 import { organizationsRoutes } from './http/controllers/organizations/routes'
 import { petsRoutes } from './http/controllers/pets/routes'
+
+const allowedCorsOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3333',
+  'https://api-find-a-friend.lemartins07.cfd',
+]
 
 export const app = fastify()
 
@@ -29,7 +36,7 @@ app.register(swagger, {
       description: 'Documentação dos endpoints',
       version: '1.0.0',
     },
-    servers: [{ url: 'http://localhost:3333' }],
+    servers: [{ url: '/' }],
     components: {
       securitySchemes: {
         bearerAuth: { type: 'http', scheme: 'bearer' },
@@ -53,6 +60,22 @@ app.register(swaggerUi, {
 })
 
 app.register(fastifyCookie)
+
+app.register(fastifyCors, {
+  origin(origin, callback) {
+    if (!origin) {
+      return callback(null, true)
+    }
+
+    const isAllowed = allowedCorsOrigins.some((allowedOrigin) => {
+      return origin === allowedOrigin
+    })
+
+    return callback(null, isAllowed)
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+})
 
 app.register(organizationsRoutes)
 app.register(petsRoutes)
