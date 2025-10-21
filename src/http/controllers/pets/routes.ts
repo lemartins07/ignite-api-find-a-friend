@@ -4,6 +4,7 @@ import { verifyJwt } from '@/http/middlewares/verify-jwt'
 import { verifyOrganizationParam } from '@/http/middlewares/verify-organization'
 
 import { create } from './create'
+import { get } from './get'
 import { list } from './list'
 
 export async function petsRoutes(app: FastifyInstance) {
@@ -176,6 +177,49 @@ export async function petsRoutes(app: FastifyInstance) {
     },
     create,
   )
+
+  app.get('/pet/:petId', {
+    schema: {
+      summary: 'Get pet details',
+      tags: ['Pets'],
+      params: {
+        type: 'object',
+        required: ['petId'],
+        properties: {
+          petId: {
+            type: 'string',
+            format: 'uuid',
+            description: 'Identifier of the pet to retrieve',
+          },
+        },
+        additionalProperties: false,
+      },
+      response: {
+        200: {
+          description: 'Pet details returned successfully',
+          type: 'object',
+          required: ['pet'],
+          properties: {
+            pet: {
+              type: 'object',
+              additionalProperties: true,
+            },
+          },
+          additionalProperties: false,
+        },
+        404: {
+          description: 'No pet was found with the provided identifier',
+          type: 'object',
+          required: ['message'],
+          properties: {
+            message: { type: 'string' },
+          },
+          additionalProperties: false,
+        },
+      },
+    },
+    handler: get,
+  })
 
   app.get(
     '/pets',

@@ -3,12 +3,23 @@ import { randomUUID } from 'node:crypto'
 import { Pet } from '@prisma/client'
 
 import { CreatePetInput } from '@/use-cases/dtos/create-pet-input'
+import { GetPetInput } from '@/use-cases/dtos/get-pet-input'
 import { ListPetsInput } from '@/use-cases/dtos/list-pets-input'
 
 import { PetsRepository } from '../pets-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
   public items: Pet[] = []
+
+  async get({ petId }: GetPetInput) {
+    const pet = this.items.find((pet) => pet.id === petId)
+
+    if (!pet) {
+      return null
+    }
+
+    return pet
+  }
 
   async list(filter: ListPetsInput): Promise<Pet[]> {
     const pets = this.items.filter((pet) => {

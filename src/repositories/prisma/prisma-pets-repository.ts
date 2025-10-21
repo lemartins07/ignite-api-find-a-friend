@@ -2,11 +2,22 @@ import { Pet, Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/prisma'
 import { CreatePetInput } from '@/use-cases/dtos/create-pet-input'
+import { GetPetInput } from '@/use-cases/dtos/get-pet-input'
 import { ListPetsInput } from '@/use-cases/dtos/list-pets-input'
 
 import { PetsRepository } from '../pets-repository'
 
 export class PrismaPetsRepository implements PetsRepository {
+  async get({ petId }: GetPetInput) {
+    const pet = await prisma.pet.findFirst({
+      where: {
+        id: petId,
+      },
+    })
+
+    return pet
+  }
+
   async list(filter: ListPetsInput): Promise<Pet[]> {
     const { city, state, age, energy_level, size, independence_level } = filter
 
